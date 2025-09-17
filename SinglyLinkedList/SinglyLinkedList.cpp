@@ -183,17 +183,129 @@ class SinglyLinkedList{
 		}
 		
 		void editNodeAtPos(int x, int pos){
-			
+			int size=countNodes();
+			if (pos<0 || pos>=size) {
+				cout<<"Invalid position.\n"; return;
+			}
+			if (pos==0) {
+				editNodeAtFirst(x); return;	
+			}
+			if (pos==size-1){
+				editNodeAtLast(x); return;
+			}
+			Node* cur=head->next;
+			int i=1;
+			while (cur->next !=nullptr){
+				if (i==pos){
+					cur->info=x; return;
+				}
+				i+=1;
+				cur=cur->next;
+			}
 		}
 		//Sort the list in ascending order
+		//Bubble sort
 		void sortListAsc(){
-			
+			if (isEmpty()) return;
+			Node* cur=head;
+			while (cur->next != nullptr){
+				Node* q = cur->next;
+				while (q != nullptr){
+					if (cur->info > q->info){	//Edit > < to change Asc/Desc
+						int t = cur->info; cur->info= q->info; q->info=t;
+					}
+					q=q->next;
+				}
+				cur=cur->next;
+			}
 		}
 		//Sort the list in descending order
+		//Bubble sort
 		void sortListDesc(){
-			
+			if (isEmpty()) return;
+			Node* cur=head;
+			while (cur->next != nullptr){
+				Node* q = cur->next;
+				while (q != nullptr){
+					if (cur->info < q->info){	//Edit > < to change Asc/Desc
+						int t = cur->info; cur->info= q->info; q->info=t;
+					}
+					q=q->next;
+				}
+				cur=cur->next;
+			}			
 		}	
-					
+		
+		int getMax(){
+			int max=head->info;
+			Node* cur=head;
+			while (cur != nullptr){
+				if (cur->info > max) max = cur->info;
+				cur=cur->next;
+			}
+			return max;
+		}
+			
+		int getMin(){
+			int min=head->info;
+			Node* cur=head;
+			while (cur != nullptr){
+				if (cur->info < min) min = cur->info;
+				cur=cur->next;
+			}
+			return min;
+		}	
+		
+		int getFirstPosOfNode(int x){
+			int pos=-1, i=0;
+			Node* cur=head;
+			while (cur != nullptr){
+				if (cur->info == x){
+					pos=i; break;
+				}
+				i+=1;
+				cur=cur->next;
+			}
+			return pos;
+		}
+		//Return the postion k-th of x. Return -1 in case find not found.
+		int getPosTheKOfNode(int x, int k){
+			int pos=-1, i=0, count=0;
+			Node* cur=head;
+			while(cur!=nullptr){
+				if (cur->info==x){
+					count++;
+					if (count==k){
+						pos=i; break;
+					}
+				}
+				i++;
+				cur=cur->next;
+			}
+			return pos;
+		}		
+		//Sort from pos1 to pos2 in the list 
+		void sortAsc(int pos1, int pos2){			
+			int i=0, j=0;
+			if (isEmpty()) return;
+			if (pos1>pos2){int t=pos1; pos1=pos2;pos2=t;}
+			Node* cur=head;
+			while (cur!=nullptr && i!=pos1){
+				cur=cur->next;
+				i++;
+			}
+			while (cur->next != nullptr && i!=pos2-1){
+				Node* q = cur->next;
+				j=i+1;
+				while (q != nullptr && j!=pos2){
+					if (cur->info > q->info){	//Edit > < to change Asc/Desc
+						int t = cur->info; cur->info= q->info; q->info=t;
+					}
+					q=q->next; j++;
+				}
+				cur=cur->next; i++;
+			}			
+		}
 		//Traversal the list
 		void display(){
 			Node* cur=head;
@@ -211,12 +323,16 @@ int main(){
 	myList.addFirst(5);
 	myList.addFirst(8);
 	myList.addFirst(2);
-	myList.addFirst(9);
+	myList.addFirst(15);
 	myList.display();
 	
 	myList.addLast(11);	
 	myList.addLast(6);	
+	myList.addLast(2);	
 	myList.addLast(15);	
+	myList.addLast(5);	
+	myList.addLast(15);	
+	myList.addLast(8);	
 	myList.display();
 	
 	cout<<"Number of nodes: " << myList.countNodes() <<endl;
@@ -237,14 +353,46 @@ int main(){
 //	cout<<"Input position to add pos = "; cin>>pos;
 //	myList.addAtPos(x,pos);
 //	myList.display() ;	
-	cout<<"The value at first is: "<<myList.getValueAtFirst()	<<endl;
-	cout<<"\nGet value at pos:\n";
-	int pos;
-	cout<<"Input position to get value: "; cin>>pos;	
-	int rs = myList.getValueAtPos(pos);
-	if (rs!=-999)
-		cout<<"Value at " <<pos<< " is: "<<rs<<endl;
-	else
-		cout<<pos<<" is out of range." <<endl;
-	return 0;
+//	cout<<"The value at first is: "<<myList.getValueAtFirst()	<<endl;
+//	cout<<"\nGet value at pos:\n";
+//	int pos;
+//	cout<<"Input position to remove node: "; cin>>pos;	
+//	int rs = myList.getValueAtPos(pos);
+//	if (rs!=-999)
+//		cout<<"Value at " <<pos<< " is: "<<rs<<endl;
+//	else
+//		cout<<pos<<" is out of range." <<endl;
+//	cout<<"\nGet value at pos:\n";
+//	int pos, x;
+//	cout<<"Input value x = "; cin>>x;
+//	cout<<"Input position to edit: pos = "; cin>>pos;	
+//	myList.editNodeAtPos(x, pos);
+//	myList.display();
+//	cout<<"\nSorted list"<<endl;
+//	myList.sortListAsc();
+//	myList.sortListDesc();
+//	myList.display();
+//	cout<<"---Get max/min ---"<<endl;
+//	cout<<"The max = "<<myList.getMax()
+//		<<", min = "<<myList.getMin()<<endl;
+
+//	cout<<"---Get the position first found x ---"<<endl;
+//	int x;
+//	cout<<"Input value to search: x = "; cin>>x;	
+//	cout<<"The position first found "<< x
+//		<<" is "<<myList.getFirstPosOfNode(x);
+//	cout<<"---Get the position the-k of x ---"<<endl;		
+//	int x,k;
+//	cout<<"Input value to search: x = "; cin>>x;
+//	cout<<"Input the-k: k = "; cin>>k;
+//	int pos = myList.getPosTheKOfNode(x,k);
+//	if (pos!=-1)
+//		cout<<"The position "<<k<<"-th of "<<x<<" is: "<<pos <<endl;
+//	else
+//		cout<<"Find not found the-"<<k<<" of "<<x<<endl;
+	int pos1=myList.getPosTheKOfNode(myList.getMin(),2);
+	int pos2=myList.getPosTheKOfNode(myList.getMax(),3);
+	myList.sortAsc(pos1,pos2);
+	myList.display();
+			
 }
