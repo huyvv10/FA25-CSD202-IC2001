@@ -306,6 +306,20 @@ class SinglyLinkedList{
 				cur=cur->next; i++;
 			}			
 		}
+		
+		int getValuePrev(int pos){
+			return 0;
+		}
+		int getValueAfter(int pos){
+			return 0;
+		}	
+		
+		void editNodePrev(int x, int pos){
+			
+		}	
+		void editNodeAfter(int x, int pos){
+			
+		}		
 		//Traversal the list
 		void display(){
 			Node* cur=head;
