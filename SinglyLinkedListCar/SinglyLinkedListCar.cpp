@@ -76,6 +76,30 @@ class SinglyLinkedListCar {
 			}
 		}
 
+		void searchCarByID(string _id){
+			
+		}
+		
+		void searchCarByName(string _nameKeyword){
+			
+		}
+
+		void getTheMostExpensiveCar(){
+			
+		}	
+		
+		void getTheCheapestcar(){
+			
+		}	
+		
+		void removeCarById(string _id){
+			
+		}
+		
+		void updateCarInfo(string id){
+			
+		}
+		
 		void displayList() {
 			Node* cur=head;
 			cout<<left<< setw(5)<< "ID"
