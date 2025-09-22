@@ -144,10 +144,11 @@ int main() {
 				cout<<"Input car name: "; getline(cin,_name);
 				cout<<"Input car color: "; cin>>_color;
 				cout<<"Input car price: "; cin>>_price;
-//				Car xx = new Car(_id, _name, _color, _price);
-				myList.addFirst(new Car(_id, _name, _color, _price));	
-//				myList.addFirst(&xx);	
+				Car* x;
+				x = new Car(_id, _name, _color, _price);
+				myList.addFirst(x);	
 				myList.displayList();		
+//				myList.addFirst(new Car(_id, _name, _color, _price));	
 				break;
 			case 2:
 				myList.displayList();
