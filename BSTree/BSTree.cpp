@@ -1,4 +1,5 @@
 #include <iostream>
+#include <queue>
 using namespace std;
 
 class TreeNode {
@@ -12,6 +13,51 @@ class TreeNode {
 		}
 };
 
+class Node{
+	public:
+		TreeNode* info;
+		Node* next;
+		Node(TreeNode* value){
+			this->info=value;
+			this->next=nullptr;
+		}
+};
+class Queue{
+	private:
+		Node *head, *tail;
+	public:
+		Queue(){
+			this->head=nullptr;
+			this->tail=nullptr;
+		}
+		
+		bool isEmtpy(){
+			return this->head==nullptr;
+		}
+		
+		void enqueue(TreeNode* x){
+			Node* newNode= new Node(x);
+			if (isEmtpy())
+				head=tail=newNode;
+			else{
+				tail->next=newNode;
+				tail=newNode;
+			}	
+		}
+		
+		TreeNode* dequeue(){
+			if (isEmtpy()){
+				cout<<"Queue is empty."<<endl;
+				return nullptr;
+			}	
+			TreeNode* x = this->head->info;
+			if (this->head->next==nullptr)
+				head=tail=nullptr;
+			else
+				head=head->next;
+			return x;	
+		}
+};
 class BSTree {
 	private:
 		TreeNode* root;
@@ -91,10 +137,42 @@ class BSTree {
 			visit(root);						//Visit root
 		}
 		
+		//Using collection embeded queue of C++
 		void breadthFirstTraversal(){
-			
+			if (this->root==nullptr)
+				return;
+			queue<TreeNode*> myQ;
+			myQ.push(root);
+			while (!myQ.empty()){
+				TreeNode* p=myQ.front(); //Read data at the beginning of Queue
+				myQ.pop();				//Remove data at the beginning of Queue
+				visit(p);
+				if (p->left!=nullptr)
+					myQ.push(p->left);
+				if (p->right!=nullptr)
+					myQ.push(p->right);
+			}				
 		}
 		
+		//Using customize queue
+		void breadthFirstTraversal2(){
+			if (this->root==nullptr)
+				return;
+			Queue myQ;			
+			TreeNode* p=this->root;
+			myQ.enqueue(p);
+			while (!myQ.isEmtpy()){
+				TreeNode* p = myQ.dequeue();
+				visit(p);
+				if (p->left!=nullptr){
+					myQ.enqueue(p->left);
+				}					
+				if (p->right!=nullptr){
+					myQ.enqueue(p->right);
+				}					
+			}
+		}
+	
 		int countNodes(TreeNode* root){
 			if (root==nullptr) return 0;
 			int count=0,l=0,r=0;
@@ -119,12 +197,19 @@ int main() {
 	myBST.addATreeNode(10);
 	myBST.addATreeNode(14);
 	myBST.addATreeNode(11);
-	myBST.addATreeNode(18);
+	myBST.addATreeNode(2);
+	myBST.addATreeNode(5);
+	myBST.addATreeNode(3);
+	myBST.addATreeNode(8);
 	myBST.preOrderTraversal(myBST.getRoot());
 	cout<<endl;
 	myBST.inOrderTraversal(myBST.getRoot());
 	cout<<endl;
 	myBST.postOrderTraversal(myBST.getRoot());
 	cout<<"\nNumber of nodes: "<<myBST.countNodes(myBST.getRoot())<<endl;
+	cout<<"\nBFS"<<endl;
+	myBST.breadthFirstTraversal();	
+	cout<<endl;
+	myBST.breadthFirstTraversal2();	
 	return 0;
 }
