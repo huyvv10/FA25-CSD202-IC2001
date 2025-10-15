@@ -13,49 +13,49 @@ class TreeNode {
 		}
 };
 
-class Node{
+class Node {
 	public:
 		TreeNode* info;
 		Node* next;
-		Node(TreeNode* value){
+		Node(TreeNode* value) {
 			this->info=value;
 			this->next=nullptr;
 		}
 };
-class Queue{
+class Queue {
 	private:
 		Node *head, *tail;
 	public:
-		Queue(){
+		Queue() {
 			this->head=nullptr;
 			this->tail=nullptr;
 		}
-		
-		bool isEmtpy(){
+
+		bool isEmtpy() {
 			return this->head==nullptr;
 		}
-		
-		void enqueue(TreeNode* x){
+
+		void enqueue(TreeNode* x) {
 			Node* newNode= new Node(x);
 			if (isEmtpy())
 				head=tail=newNode;
-			else{
+			else {
 				tail->next=newNode;
 				tail=newNode;
-			}	
+			}
 		}
-		
-		TreeNode* dequeue(){
-			if (isEmtpy()){
+
+		TreeNode* dequeue() {
+			if (isEmtpy()) {
 				cout<<"Queue is empty."<<endl;
 				return nullptr;
-			}	
+			}
 			TreeNode* x = this->head->info;
 			if (this->head->next==nullptr)
 				head=tail=nullptr;
 			else
 				head=head->next;
-			return x;	
+			return x;
 		}
 };
 class BSTree {
@@ -68,6 +68,10 @@ class BSTree {
 
 		TreeNode* getRoot() {
 			return this->root;
+		}
+
+		void setRoot(TreeNode* x) {
+			this->root=x;
 		}
 
 		bool isEmpty() {
@@ -136,14 +140,14 @@ class BSTree {
 				postOrderTraversal(root->right);	//Visit Right
 			visit(root);						//Visit root
 		}
-		
+
 		//Using collection embeded queue of C++
-		void breadthFirstTraversal(){
+		void breadthFirstTraversal() {
 			if (this->root==nullptr)
 				return;
 			queue<TreeNode*> myQ;
 			myQ.push(root);
-			while (!myQ.empty()){
+			while (!myQ.empty()) {
 				TreeNode* p=myQ.front(); //Read data at the beginning of Queue
 				myQ.pop();				//Remove data at the beginning of Queue
 				visit(p);
@@ -151,38 +155,113 @@ class BSTree {
 					myQ.push(p->left);
 				if (p->right!=nullptr)
 					myQ.push(p->right);
-			}				
-		}
-		
-		//Using customize queue
-		void breadthFirstTraversal2(){
-			if (this->root==nullptr)
-				return;
-			Queue myQ;			
-			TreeNode* p=this->root;
-			myQ.enqueue(p);
-			while (!myQ.isEmtpy()){
-				TreeNode* p = myQ.dequeue();
-				visit(p);
-				if (p->left!=nullptr){
-					myQ.enqueue(p->left);
-				}					
-				if (p->right!=nullptr){
-					myQ.enqueue(p->right);
-				}					
 			}
 		}
-	
-		int countNodes(TreeNode* root){
+
+		//Using customize queue
+		void breadthFirstTraversal2() {
+			if (this->root==nullptr)
+				return;
+			Queue myQ;
+			TreeNode* p=this->root;
+			myQ.enqueue(p);
+			while (!myQ.isEmtpy()) {
+				TreeNode* p = myQ.dequeue();
+				visit(p);
+				if (p->left!=nullptr) {
+					myQ.enqueue(p->left);
+				}
+				if (p->right!=nullptr) {
+					myQ.enqueue(p->right);
+				}
+			}
+		}
+
+		int countNodes(TreeNode* root) {
 			if (root==nullptr) return 0;
 			int count=0,l=0,r=0;
 			if (root->left!=nullptr)
 				l=countNodes(root->left);	//Visit Left
 			count++;						//Visit root
 			if (root->right!=nullptr)
-				r=countNodes(root->right);	//Visit Right	
-			return count+l+r;			
-		}		
+				r=countNodes(root->right);	//Visit Right
+			return count+l+r;
+		}
+
+		//Find the maximum value Node of the left subtree
+		TreeNode* findTheRightMostNode(TreeNode* x) {
+			if (x==nullptr)
+				return nullptr;
+			TreeNode* p=x->left;
+			while (p->right!=nullptr) {
+				p=p->right;
+			}
+			return p;
+		}
+
+		//Copy the maximum value of the left subtree
+		TreeNode* deleteByCopying(TreeNode* node, int x) {
+			if (node==nullptr) return nullptr;
+			if (x < node->info)
+				node->left = deleteByCopying(node->left, x);
+			else if (x > node->info)
+				node->right = deleteByCopying(node->right, x);
+			else {
+				if (node->left ==nullptr)
+					return node->right;
+				if (node->right ==nullptr)
+					return node->left;
+				TreeNode* copyNode = findTheRightMostNode(node);
+				node->info = copyNode->info;
+				node->left = deleteByCopying(node->left, copyNode->info);
+			}
+			return node;
+		}
+		
+		TreeNode* findTheLeftMostNode(TreeNode* x){
+			if (x==nullptr) return nullptr;
+			TreeNode* p=x->right;
+			while (p->left!=nullptr){
+				p=p->left;
+			}
+			return p;
+		}
+		//Copy the minimum value of the right subtree
+		TreeNode* deleteByCopyingRight(TreeNode* node, int x) {
+			if (node==nullptr) return nullptr;
+			if (x < node->info)
+				node->left = deleteByCopyingRight(node->left, x);
+			else if (x > node->info)
+				node->right = deleteByCopyingRight(node->right, x);
+			else {
+				if (node->left ==nullptr)
+					return node->right;
+				if (node->right ==nullptr)
+					return node->left;
+				TreeNode* copyNode = findTheLeftMostNode(node);
+				node->info = copyNode->info;
+				node->left = deleteByCopyingRight(node->left, copyNode->info);
+			}
+			return node;
+		}
+
+		TreeNode* deleteByMerging(TreeNode* node, int x) {
+			if (node==nullptr) return nullptr;
+			if (x < node->info)
+				node->left = deleteByMerging(node->left, x);
+			else if (x > node->info)
+				node->right = deleteByMerging(node->right, x);
+			else {
+				if (node->left ==nullptr)
+					return node->right;
+				if (node->right ==nullptr)
+					return node->left;
+				TreeNode* mergeNode = findTheRightMostNode(node);
+				mergeNode->right = node->right;
+				return node->left;				
+			}
+			return node;
+		}
 };
 
 int main() {
@@ -208,8 +287,24 @@ int main() {
 	myBST.postOrderTraversal(myBST.getRoot());
 	cout<<"\nNumber of nodes: "<<myBST.countNodes(myBST.getRoot())<<endl;
 	cout<<"\nBFS"<<endl;
-	myBST.breadthFirstTraversal();	
+	myBST.breadthFirstTraversal();
 	cout<<endl;
+	myBST.breadthFirstTraversal2();
+	cout<<"\nDelete by Copying"<<endl;
+	int x;
+//	cout<<"\nInput x to delete: "; cin>>x;
+//	myBST.setRoot(myBST.deleteByCopying(myBST.getRoot(), x));
+	myBST.breadthFirstTraversal2();
+//	cout<<"\nDelete by Merging"<<endl;
+//	cout<<"\nInput x to delete: ";
+//	cin>>x;
+//	myBST.setRoot(myBST.deleteByMerging(myBST.getRoot(), x));
+//	myBST.breadthFirstTraversal2();
+
+	cout<<"\nDelete by Copying right"<<endl;
+	cout<<"\nInput x to delete: ";
+	cin>>x;
+	myBST.setRoot(myBST.deleteByCopyingRight(myBST.getRoot(), x));
 	myBST.breadthFirstTraversal2();	
 	return 0;
 }
