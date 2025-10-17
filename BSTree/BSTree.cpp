@@ -188,19 +188,43 @@ class BSTree {
 			return count+l+r;
 		}
 
-		int countAllLeafNode(TreeNode* node){
-			return 0;
+		int countAllLeafNode(TreeNode* node) {
+			if (node==nullptr) return 0;
+			int count=0,l=0,r=0;
+			if (node->left==nullptr && node->right==nullptr)
+				count++;						//Visit root
+			if (node->left!=nullptr)
+				l=countAllLeafNode(node->left);	//Visit Left
+			if (node->right!=nullptr)
+				r=countAllLeafNode(node->right);	//Visit Right
+			return count+l+r;
 		}
-		
-		int countAllNodeHasOnlyALeftChild(TreeNode* node){
-			return 0;
+
+		int countAllNodeHasOnlyALeftChild(TreeNode* node) {
+			if (node==nullptr) return 0;
+			int count=0,l=0,r=0;
+			if (node->left!=nullptr && node->right==nullptr)
+				count++;						//Visit root
+			if (node->left!=nullptr)
+				l=countAllNodeHasOnlyALeftChild(node->left);	//Visit Left
+			if (node->right!=nullptr)
+				r=countAllNodeHasOnlyALeftChild(node->right);	//Visit Right
+			return count+l+r;
 		}
-		
-		int countAllNodeHasOnlyARightChild(TreeNode* node){
-			return 0;
+
+		int countAllNodeHasOnlyARightChild(TreeNode* node) {
+			if (node==nullptr) return 0;
+			int count=0,l=0,r=0;
+			if (node->left==nullptr && node->right!=nullptr)
+				count++;						//Visit root
+			if (node->left!=nullptr)
+				l=countAllNodeHasOnlyARightChild(node->left);	//Visit Left
+			if (node->right!=nullptr)
+				r=countAllNodeHasOnlyARightChild(node->right);	//Visit Right
+			return count+l+r;
 		}
-		
-		
+
+
 		//Find the maximum value Node of the left subtree
 		TreeNode* findTheRightMostNode(TreeNode* x) {
 			if (x==nullptr)
@@ -306,9 +330,9 @@ class BSTree {
 			if (root->left==nullptr && root->right==nullptr)
 				return nullptr;
 			if (root->left!=nullptr)
-				root->left=deleteAllLeafNodes(root->left);	
+				root->left=deleteAllLeafNodes(root->left);
 			if (root->right!=nullptr)
-				root->right=deleteAllLeafNodes(root->right);	
+				root->right=deleteAllLeafNodes(root->right);
 			return root;
 		}
 };
@@ -339,6 +363,12 @@ int main() {
 	myBST.breadthFirstTraversal();
 	cout<<endl;
 	myBST.breadthFirstTraversal2();
+	cout<<"\nCount leaf node";
+	cout<<myBST.countAllLeafNode(myBST.getRoot());
+	cout<<"\nCount node only has left child";
+	cout<<myBST.countAllNodeHasOnlyALeftChild(myBST.getRoot());
+	cout<<"\nDelete node only has right child"<<endl;
+	cout<<myBST.countAllNodeHasOnlyARightChild(myBST.getRoot());
 	cout<<"\nDelete by Copying"<<endl;
 	int x;
 //	cout<<"\nInput x to delete: "; cin>>x;
@@ -361,8 +391,8 @@ int main() {
 //	cout<<"\nDelete all nodes has only a right child"<<endl;
 //	myBST.setRoot(myBST.deleteNodesHasOnlyRightChild(myBST.getRoot()));
 //	myBST.breadthFirstTraversal2();
-	cout<<"\nDelete all leaf nodes"<<endl;
-	myBST.setRoot(myBST.deleteAllLeafNodes(myBST.getRoot()));
-	myBST.breadthFirstTraversal2();
+//	cout<<"\nDelete all leaf nodes"<<endl;
+//	myBST.setRoot(myBST.deleteAllLeafNodes(myBST.getRoot()));
+//	myBST.breadthFirstTraversal2();
 	return 0;
 }
