@@ -188,6 +188,19 @@ class BSTree {
 			return count+l+r;
 		}
 
+		int countAllLeafNode(TreeNode* node){
+			return 0;
+		}
+		
+		int countAllNodeHasOnlyALeftChild(TreeNode* node){
+			return 0;
+		}
+		
+		int countAllNodeHasOnlyARightChild(TreeNode* node){
+			return 0;
+		}
+		
+		
 		//Find the maximum value Node of the left subtree
 		TreeNode* findTheRightMostNode(TreeNode* x) {
 			if (x==nullptr)
@@ -217,11 +230,11 @@ class BSTree {
 			}
 			return node;
 		}
-		
-		TreeNode* findTheLeftMostNode(TreeNode* x){
+
+		TreeNode* findTheLeftMostNode(TreeNode* x) {
 			if (x==nullptr) return nullptr;
 			TreeNode* p=x->right;
-			while (p->left!=nullptr){
+			while (p->left!=nullptr) {
 				p=p->left;
 			}
 			return p;
@@ -258,9 +271,45 @@ class BSTree {
 					return node->left;
 				TreeNode* mergeNode = findTheRightMostNode(node);
 				mergeNode->right = node->right;
-				return node->left;				
+				return node->left;
 			}
 			return node;
+		}
+
+		//Delete all tree node that has only a left child
+		TreeNode* deleteNodesHasOnlyLeftChild(TreeNode* root) {
+			if (root==nullptr) return nullptr;
+			if (root->left!=nullptr && root->right==nullptr)
+				return root->left;
+			if (root->left!=nullptr)
+				root->left=deleteNodesHasOnlyLeftChild(root->left);	//Visit Left
+			if (root->right!=nullptr)
+				root->right=deleteNodesHasOnlyLeftChild(root->right);	//Visit LeftpreOrderTraversal(root->right);	//Visit Right
+			return root;
+		}
+
+		//Delete all tree node that has only a right child
+		TreeNode* deleteNodesHasOnlyRightChild(TreeNode* root) {
+			if (root==nullptr) return nullptr;
+			if (root->left==nullptr && root->right!=nullptr)
+				return root->right;
+			if (root->left!=nullptr)
+				root->left=deleteNodesHasOnlyRightChild(root->left);	//Visit Left
+			if (root->right!=nullptr)
+				root->right=deleteNodesHasOnlyRightChild(root->right);	//Visit LeftpreOrderTraversal(root->right);	//Visit Right
+			return root;
+		}
+
+		//Delete all tree node that is a leaf node - external node
+		TreeNode* deleteAllLeafNodes(TreeNode* root) {
+			if (root==nullptr) return nullptr;
+			if (root->left==nullptr && root->right==nullptr)
+				return nullptr;
+			if (root->left!=nullptr)
+				root->left=deleteAllLeafNodes(root->left);	
+			if (root->right!=nullptr)
+				root->right=deleteAllLeafNodes(root->right);	
+			return root;
 		}
 };
 
@@ -301,10 +350,19 @@ int main() {
 //	myBST.setRoot(myBST.deleteByMerging(myBST.getRoot(), x));
 //	myBST.breadthFirstTraversal2();
 
-	cout<<"\nDelete by Copying right"<<endl;
-	cout<<"\nInput x to delete: ";
-	cin>>x;
-	myBST.setRoot(myBST.deleteByCopyingRight(myBST.getRoot(), x));
-	myBST.breadthFirstTraversal2();	
+//	cout<<"\nDelete by Copying right"<<endl;
+//	cout<<"\nInput x to delete: ";
+//	cin>>x;
+//	myBST.setRoot(myBST.deleteByCopyingRight(myBST.getRoot(), x));
+//	myBST.breadthFirstTraversal2();
+//	cout<<"\nDelete all nodes has only a left child"<<endl;
+//	myBST.setRoot(myBST.deleteNodesHasOnlyLeftChild(myBST.getRoot()));
+//	myBST.breadthFirstTraversal2();
+//	cout<<"\nDelete all nodes has only a right child"<<endl;
+//	myBST.setRoot(myBST.deleteNodesHasOnlyRightChild(myBST.getRoot()));
+//	myBST.breadthFirstTraversal2();
+	cout<<"\nDelete all leaf nodes"<<endl;
+	myBST.setRoot(myBST.deleteAllLeafNodes(myBST.getRoot()));
+	myBST.breadthFirstTraversal2();
 	return 0;
 }
